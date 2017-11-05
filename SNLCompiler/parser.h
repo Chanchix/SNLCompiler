@@ -6,78 +6,76 @@
 #include"LR1Driver.h"
 #include"exAlgorithm.h"
 #include"tree.h"
+#include"parser_state.h"
+#include"corrector.h"
+
 
 template<class Driver>
 class LR1Parser {
-	class parser_state;
 	Driver &driver;
+    void reduce(const grammer::Rule *, tree<Token> * ,parser_state_view<Driver> &);
 public:
 	LR1Parser():driver(_Singleton(Driver)) { }
 	tree<Token>* getSyntaxTree(TokenList *);
 };
 
 template<class Driver>
-class LR1Parser<Driver>::parser_state{
-    std::stack< typename Driver::State* > states_stack;
-	TokenList *token_list;
-    tree<Token> *stree;
-	TokenList::iterator token_iterator;
-public:
-	parser_state(TokenList *tl, tree<Token> *_stree):token_list(tl),token_iterator(tl->begin()),stree(_stree) {}
-    inline void pushState(typename Driver::State* state) {
-		states_stack.push(state);
-	}
-	inline typename Driver::State* topState(){
-	 	return  states_stack.top();
-	}
-	inline void popState(){
-		states_stack.pop();
-	}
-	inline Token& topToken(){
-		return *token_iterator;
-	}
-	inline void popToken(){
-		token_iterator++;
-	}
-	bool empty_token()const {return token_iterator == token_list->end(); }
-	bool empty_state()const { return states_stack.empty();}
-};
-
-template<class Driver>
 tree<Token>* LR1Parser<Driver>::getSyntaxTree(TokenList *token_list) {
 	assert(token_list != nullptr);
     tree<Token>* syntax_tree = new tree<Token>();
-	auto state_machine = driver.getStateMachine();
-	parser_state pstate(token_list, syntax_tree);
+    auto &state_machine = driver.getStateMachine();
+	parser_state_view<Driver> pstate(token_list, syntax_tree);
+    corrector_dispatcher<Driver> syntax_corrector(pstate);
 	pstate.pushState(state_machine.getInitState());
+    
 	while(true){
 		Token &token = pstate.topToken();
         typename Driver::State *state = pstate.topState();
         auto action = state_machine.getAction(state, token.getcode());
 		switch(action.getAction()){
-			case Action::Accept :
-				std::cout<<"Success.\n";
-				return nullptr;
+            case Action::Accept :{
+                tree<Token>::iterator iter = pstate.topNode();
+                syntax_tree->insert_subtree(syntax_tree->begin(), iter);
+                return syntax_tree;
+            }
 			case Action::Error	:
-				return nullptr;
+                syntax_corrector.process();
+                break;
 			case Action::Shift	:
 				pstate.pushState(action.getState());
+                pstate.pushNode(new tree_node(token));
 				pstate.popToken();
 				break;
 			case Action::Reduce :
 				auto *rule = action.getRule();
-				size_t size = rule->size();
-				GrammerCode left = rule->getLeft();
-                while(!pstate.empty_state() && size > 0) { pstate.popState(); --size;}
-				if(pstate.empty_state()) {
-					return nullptr;
-				}
-				auto *reduced_state = state_machine.getAction(pstate.topState(), left).getState();
-				pstate.pushState(reduced_state);
+                reduce(rule, syntax_tree, pstate);
 				break;
 		}
 	}
-	return nullptr;
+	return nullptr;     //unreachable
 }
-
+template<class Driver>
+void LR1Parser<Driver>::reduce(const grammer::Rule *rule, tree<Token> *syntax_tree, parser_state_view<Driver> &pstate){
+    size_t size = rule->size();
+    GrammerCode left = rule->getLeft();
+    tree_node *father = new tree_node(Token(left));
+    tree<Token>::iterator_base iter = father;
+    bool first_append = true;
+    while(!pstate.empty_state() && size-- > 0) {
+        tree<Token>::iterator_base new_node_iterator = pstate.topNode();
+        if(first_append){
+            iter = syntax_tree->append_child(iter, new_node_iterator);
+            first_append = false;
+        }
+        else
+            iter = syntax_tree->insert_subtree(iter, new_node_iterator);
+        pstate.popNode();
+        pstate.popState();
+    }
+    assert(!pstate.empty_state());
+    auto &state_machine = driver.getStateMachine();
+    auto *reduced_state = state_machine.getAction(pstate.topState(), left).getState();
+    pstate.pushState(reduced_state);
+    pstate.pushNode(father);
+}
 #endif

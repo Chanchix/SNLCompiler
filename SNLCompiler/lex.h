@@ -4,20 +4,21 @@
 using LexCode = unsigned int;
 #include <string>
 #include <unordered_map>
+#include"interface.h"
 
 class Lex {
-public:
+protected:
 	using _WTC = std::unordered_map<std::string, LexCode>;
 	using _CTW = std::unordered_map<LexCode, std::string>;
 
 	_WTC word_to_code;	
 	_CTW code_to_word;	//错误处理时使用的，由token的代码转换为词义信息
-
+public:
 	Lex(_WTC&& _wtc, _CTW&& _ctw): word_to_code(std::move(_wtc)), code_to_word(std::move(_ctw)) {}
 	virtual bool isLexCode(LexCode code)const = 0;
 	virtual LexCode getEnd() const = 0;
 };
-class SNLLex : public Lex{
+class SNLLex : public Lex, public Stringizable, public Encodable{
 public:
 	enum lex {
 		end = 0,		unknown_symbol, corrupted_string,								//控制token
@@ -66,5 +67,15 @@ public:
 public:
 	bool isLexCode(LexCode code) const{ return code <= identifier && code >= end; }
 	LexCode getEnd() const { return end; }
+    std::string code_to_string(LexCode code)const {
+        _CTW::const_iterator it = code_to_word.find(code);
+        if (it != code_to_word.end()) return it->second;
+        else throw Stringizable::CodeNotFoundException(code);
+    }
+    LexCode string_to_code(const std::string &str)const {
+        _WTC::const_iterator it = word_to_code.find(str);
+        if(it != word_to_code.end()) return it->second;
+        else throw Encodable::StringNotFoundException(str);
+    }
 };
 #endif

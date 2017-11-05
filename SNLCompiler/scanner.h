@@ -55,9 +55,11 @@ char Scanner<SNLLex>::getChar() {
 }
 Token Scanner<SNLLex>::createIdToken(const char *id, int row) {
 	SNLLex &lex = _Singleton(SNLLex);
-	auto it = lex.word_to_code.find(id);
-	if (it != lex.word_to_code.end()) return Token(it->second, row);
-	else return Token(SNLLex::identifier, row, id);
+    try{
+        return Token(lex.string_to_code(id), row);
+    }catch(const Encodable::StringNotFoundException & e){
+        return Token(SNLLex::identifier, row, id);
+    }
 }
 
 TokenList* Scanner<SNLLex>::getTokenList() {

@@ -45,7 +45,7 @@ public:
 	LR1Driver& operator=(const LR1Driver&) = delete;
 	LR1Driver(const LR1Driver&) = delete;
     const SpecifiedGrammer &getGrammer() const { return _grammer; }
-	StateMachine getStateMachine() { return StateMachine(); }
+	StateMachine& getStateMachine() { return _Singleton(StateMachine); }
 };
 
 LR1TEMPLATE

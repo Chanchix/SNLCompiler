@@ -38,12 +38,11 @@ namespace test {
         TokenList *tList = scanner.getTokenList();
         using Driver = LR1Driver<SNLGrammer>;
         LR1Parser<Driver> parser;
-        auto *tree = parser.getSyntaxTree(tList);
-        if(tree) delete tree;
+        auto *stree = parser.getSyntaxTree(tList);
+        if(stree) delete stree;
         fin.close();
     }
 }
-
 int main(int argc, char* argv[])
 {
     test::testParser();
