@@ -58,8 +58,9 @@ template<class Driver>
 void LR1Parser<Driver>::reduce(const grammer::Rule *rule, tree<Token> *syntax_tree, parser_state_view<Driver> &pstate){
     size_t size = rule->size();
     GrammerCode left = rule->getLeft();
-    tree_node *father = new tree_node(Token(left));
+    tree_node *father = new tree_node();
     tree<Token>::iterator_base iter = father;
+    unsigned int reduced_row = 0;
     bool first_append = true;
     while(!pstate.empty_state() && size-- > 0) {
         tree<Token>::iterator_base new_node_iterator = pstate.topNode();
@@ -67,12 +68,14 @@ void LR1Parser<Driver>::reduce(const grammer::Rule *rule, tree<Token> *syntax_tr
             iter = syntax_tree->append_child(iter, new_node_iterator);
             first_append = false;
         }
-        else
-            iter = syntax_tree->insert_subtree(iter, new_node_iterator);
+        else iter = syntax_tree->insert_subtree(iter, new_node_iterator);
+        reduced_row = new_node_iterator.node->data.getrow();
         pstate.popNode();
         pstate.popState();
     }
     assert(!pstate.empty_state());
+    if(first_append) reduced_row = pstate.topToken().getrow();
+    father->data = Token(left, reduced_row);
     auto &state_machine = driver.getStateMachine();
     auto *reduced_state = state_machine.getAction(pstate.topState(), left).getState();
     pstate.pushState(reduced_state);
