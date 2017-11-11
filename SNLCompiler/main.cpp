@@ -12,6 +12,7 @@
 #include"SNLGrammer.h"
 #include"parser.h"
 #include"scanner.h"
+#include"snl_corrector.h"
 #include"exAlgorithm.h"
 #define isLA true
 

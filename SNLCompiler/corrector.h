@@ -18,16 +18,14 @@ protected:
     parser_state_view<Driver> &pstate;
 public:
     corrector(parser_state_view<Driver> &_pstate):pstate(_pstate){}
+    virtual std::string get_problem_message() = 0;
     virtual void process() = 0;
 };
+
 template<class Driver>
 class corrector_dispatcher : public corrector<Driver>{
 public:
     corrector_dispatcher(parser_state_view<Driver> &_pstate):corrector<Driver>(_pstate){}
-    void process(){
-        std::cout<<"error occurred.";
-        exit(-1);
-    }
 };
 
 #endif /* corrector_h */
