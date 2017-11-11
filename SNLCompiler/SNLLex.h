@@ -8,7 +8,7 @@
 
 #ifndef SNLLex_h
 #define SNLLex_h
-#include"lex.h"
+#include"cl/lex.h"
 
 class SNLLex : public Lex{
 public:

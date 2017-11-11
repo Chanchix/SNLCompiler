@@ -1,8 +1,8 @@
 #ifndef SNL_GRAMMER_H_ 
 #define SNL_GRAMMER_H_ 
-#include"exAlgorithm.h"
+#include"cl/exAlgorithm.h"
 #include"SNLLex.h"
-#include"grammer.h"
+#include"cl/grammer.h"
 
 class SNLGrammer : public grammer::LR1Grammer<SNLLex> {
 public:

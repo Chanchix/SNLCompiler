@@ -10,8 +10,8 @@
 #define snl_corrector_h
 
 #include"SNLGrammer.h"
-#include"corrector.h"
-#include"LR1Driver.h"
+#include"cl/corrector.h"
+#include"cl/LR1Driver.h"
 using Driver = LR1Driver<SNLGrammer, true, safe>;
 
 template<>
