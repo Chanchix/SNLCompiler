@@ -8,20 +8,22 @@
 
 #ifndef error_h
 #define error_h
-#include"interface.h"
+#include<string>
+#include<exception>
+#include"exAlgorithm.h"
 
-class SyntaxError{
-public:
-    enum syntax_error{
-        
-    };
-    static std::string toString(syntax_error)const ;
-}
-class SyntaxWarning{
-public:
-    enum syntax_warning{
-        
-    };
-    static std::string toString(syntax_error)const ;
+enum class Period{
+    Lex, Syntax, Semantic, Link
 };
+class HasErrorsException : public std::exception{
+    Period time;
+public:
+    ErrorException(Period _time) :time(_time){}
+    Period getPeriod()const { return time; }
+    const char* what()const {
+        return "Compiler encountered errors and cannot process any longer";
+    }
+};
+
+
 #endif /* error_h */

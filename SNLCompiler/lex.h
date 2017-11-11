@@ -18,7 +18,7 @@ public:
 	virtual bool isLexCode(LexCode code)const = 0;
 	virtual LexCode getEnd() const = 0;
 };
-class SNLLex : public Lex, public Stringizable, public Encodable{
+class SNLLex : public Lex, public Decodable, public Encodable{
 public:
 	enum lex {
 		end = 0,		unknown_symbol, corrupted_string,								//¿ØÖÆtoken
@@ -70,7 +70,7 @@ public:
     std::string code_to_string(LexCode code)const {
         _CTW::const_iterator it = code_to_word.find(code);
         if (it != code_to_word.end()) return it->second;
-        else throw Stringizable::CodeNotFoundException(code);
+        else throw Decodable::CodeNotFoundException(code);
     }
     LexCode string_to_code(const std::string &str)const {
         _WTC::const_iterator it = word_to_code.find(str);

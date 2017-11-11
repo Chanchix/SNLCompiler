@@ -12,12 +12,12 @@
 #include<exception>
 #include"exAlgorithm.h"
 
-class Stringizable{
+class Decodable{
 public:
     virtual std::string code_to_string(unsigned int)const = 0;
     class CodeNotFoundException;
 };
-class Stringizable::CodeNotFoundException : public std::exception{
+class Decodable::CodeNotFoundException : public std::exception{
     unsigned int code;
 public:
     CodeNotFoundException(unsigned int c):code(c){}
@@ -38,7 +38,7 @@ public:
     StringNotFoundException(const std::string& str):_string(str){}
     std::string getString() { return _string; }
     const char* what(){
-        return exAlgorithm::string_format("Can not convert string\"{0}\" to string.", _string).c_str();
+        return exAlgorithm::string_format("Can not convert string\"{0}\" to code.", _string).c_str();
     }
 };
 #endif /* interface_h */

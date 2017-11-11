@@ -24,7 +24,7 @@ public:
 	TokenCode getcode() const { return code; }						//获取Token的代码
 	unsigned int getrow() const { return row; }						//获取Token在源文件中的行数
 	const char* getid()const { return identifier; }
-	std::string tostring(Stringizable &)const;							//获取Token名称
+	std::string tostring(Decodable &)const;							//获取Token名称
 	~Token();
 };
 Token::Token(const Token &other) {
@@ -62,11 +62,11 @@ bool Token::operator ==(const Token &other)const {
 		other.identifier &&
 		(strcmp(identifier, other.identifier) == 0);		//同为标识符，则比较标识符是否相同
 }
-std::string Token::tostring(Stringizable &convert) const {
+std::string Token::tostring(Decodable &convert) const {
     if (identifier) return std::string(identifier);
     else try{
         return convert.code_to_string(code);
-    }catch(Stringizable::CodeNotFoundException &e){
+    }catch(Decodable::CodeNotFoundException &e){
         return "null";
     }
 }
