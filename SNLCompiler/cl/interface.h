@@ -10,7 +10,7 @@
 #include<string>
 #include<utility>
 #include<exception>
-#include"exAlgorithm.h"
+#include"exalgorithm.h"
 
 class Decodable{
 public:

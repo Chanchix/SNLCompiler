@@ -6,10 +6,9 @@
 //  Copyright © 2017年 王振吉. All rights reserved.
 //
 
-#ifndef snl_corrector_h
-#define snl_corrector_h
-
-#include"SNLGrammer.h"
+#ifndef SNL_CORRECTOR_H_
+#define SNL_CORRECTOR_H_
+#include"snl_grammer.h"
 #include"cl/corrector.h"
 #include"cl/LR1Driver.h"
 using Driver = LR1Driver<SNLGrammer, true, safe>;

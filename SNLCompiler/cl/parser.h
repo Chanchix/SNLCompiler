@@ -4,7 +4,7 @@
 #include"token.h"
 #include"lex.h"
 #include"LR1Driver.h"
-#include"exAlgorithm.h"
+#include"exalgorithm.h"
 #include"tree.h"
 #include"parser_state.h"
 #include"corrector.h"

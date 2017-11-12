@@ -6,8 +6,8 @@
 //  Copyright © 2017年 王振吉. All rights reserved.
 //
 
-#ifndef SNLLex_h
-#define SNLLex_h
+#ifndef SNL_LEX_H_
+#define SNL_LEX_H_
 #include"cl/lex.h"
 
 class SNLLex : public Lex{
@@ -39,12 +39,10 @@ public:
                       {"while", resv_while},                { "endwh", resv_endwh },
                       {"read", resv_read},                {"write", resv_write},
                       {"return", resv_return}
-                  },
-                  
-                  {
-                      {end, "program_end"},
-                      {corrupted_string, "corrupted_string"},
-                      {unknown_symbol, "unknown_symbol"},
+                  },{
+                      {end, "$program_end"},
+                      {corrupted_string, "$corrupted_string"},
+                      {unknown_symbol, "$unknown_symbol"},
                       {assign, ":="},            {comma, ","},                {from_to, ".."},            {minus, "-"},
                       {plus, "+"},            {multi, "*"},                {div, "/"},                    {equal, "="},
                       {smaller_than, "<"},    {greater_than, ">"},        {open_paren, "("},            {close_paren, ")"},
@@ -54,8 +52,9 @@ public:
                       { resv_then, "then" },    { resv_fi, "fi" },            {resv_record, "record"},    {resv_procedure, "procedure"},
                       { resv_type, "type" },    {resv_program, "program" },    {resv_of, "of" },            { value_char, "char" },
                       {resv_var, "var"},        {resv_while, "while"},        {resv_endwh, "endwh"},        {resv_read, "read"},
-                      {resv_write, "write"},    {resv_return, "return"},    {identifier, "id"},            {unsigned_integer, "unsigned integer"}
-                  }) {};
+                      {resv_write, "write"},    {resv_return, "return"},    {identifier, "$id"},            {unsigned_integer, "$unsigned_integer"}
+                  }
+                  ) {};
 public:
     bool isLexCode(LexCode code) const override{ return code <= identifier && code >= end; }
     LexCode getEnd() const override{ return end; }

@@ -9,7 +9,7 @@
 #include<exception>
 #include <iostream>
 #include"grammer.h"
-#include"exAlgorithm.h"
+#include"exalgorithm.h"
 
 #define RulePtr 0
 #define Position 1

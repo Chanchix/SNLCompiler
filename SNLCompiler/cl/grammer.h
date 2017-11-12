@@ -9,7 +9,7 @@
 #include<map>
 
 #include"lex.h"
-#include"exAlgorithm.h"
+#include"exalgorithm.h"
 
 using GrammerCode = unsigned int;
 namespace grammer {

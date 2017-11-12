@@ -9,11 +9,15 @@
 
 
 #include"cl/LR1Driver.h"
-#include"SNLGrammer.h"
 #include"cl/parser.h"
-#include"cl/scanner.h"
+
+#include"snl_lex.h"
+#include"snl_scanner.h"
+#include"snl_grammer.h"
 #include"snl_corrector.h"
-#include"cl/exAlgorithm.h"
+
+
+#include"cl/exalgorithm.h"
 #define isLA true
 
 
