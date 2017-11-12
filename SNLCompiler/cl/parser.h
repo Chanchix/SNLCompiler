@@ -3,7 +3,7 @@
 #include<stack>
 #include"token.h"
 #include"lex.h"
-#include"LR1Driver.h"
+#include"lr1driver.h"
 #include"exalgorithm.h"
 #include"tree.h"
 #include"parser_state.h"

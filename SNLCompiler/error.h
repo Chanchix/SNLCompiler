@@ -10,7 +10,7 @@
 #define error_h
 #include<string>
 #include<exception>
-#include"cl/exAlgorithm.h"
+#include"cl/exalgorithm.h"
 
 enum class Period{
     Lex, Syntax, Semantic, Link

@@ -8,7 +8,7 @@
 
 
 
-#include"cl/LR1Driver.h"
+#include"cl/lr1driver.h"
 #include"cl/parser.h"
 
 #include"snl_lex.h"
