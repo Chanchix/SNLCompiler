@@ -64,7 +64,7 @@ public:
     virtual const char* what(){ return message.c_str();}
 };
 
-//·µ»Ø²úÉúÊ½º¬ÓĞ¿ÕµİÍÆ·ÇÖÕ¼«·ûµÄ¸öÊı
+//è¿”å›äº§ç”Ÿå¼å«æœ‰ç©ºé€’æ¨éç»ˆæç¬¦çš„ä¸ªæ•°
 LR1TEMPLATE
 size_t LR1DriverInst::last_empty(const grammer::Rule &rule) {
 	size_t pos = 0;
@@ -81,7 +81,7 @@ void LR1DriverInst::merge(FirstSet &first, FirstSet &result, GrammerCode father,
 	if (_grammer.IsLexCode(child) || child == _grammer.getEmpty())
 		result[father].insert(child);
 	else if(!first[child].empty())
-		result[father].insert(first[child].begin(), first[child].end());	//ºÏ²¢	
+		result[father].insert(first[child].begin(), first[child].end());	//åˆå¹¶	
 	
 }
 LR1TEMPLATE
@@ -91,14 +91,14 @@ const FirstSet& LR1DriverInst::get_first() {
 	auto expand = [&](FirstSet &result, FirstSet &mid)->FirstSet* {
 		FirstSet *next_mid = new FirstSet();
 		for (auto &rule_list : _grammer.getRules()) {		
-			GrammerCode code = rule_list.first;							//²úÉúÊ½×ó²¿
+			GrammerCode code = rule_list.first;							//äº§ç”Ÿå¼å·¦éƒ¨
 			bool has_empty = false;
 			for (const auto &rule : rule_list.second) {
-				bool merged = false;							//ÊÇ·ñ×ö¹ı²¢¼¯
-				size_t empty_num = last_empty(rule);				//²éÑ¯¸Ä²úÉúÊ½¿Éµ¼¿ÕµÄ·ÇÖÕ¼«·ûÊıÁ¿
+				bool merged = false;							//æ˜¯å¦åšè¿‡å¹¶é›†
+				size_t empty_num = last_empty(rule);				//æŸ¥è¯¢æ”¹äº§ç”Ÿå¼å¯å¯¼ç©ºçš„éç»ˆæç¬¦æ•°é‡
 				for (int i = 0; i < empty_num; i++) {
-					GrammerCode right_code = rule[i];					//¿Éµ¼¿ÕµÄ²úÉúÊ½ÓÒ²¿·ÇÖÕ¼«·û´úÂë
-					auto iter = mid.find(right_code);			//¼ì²é¸Ã·ÇÖÕ¼«·ûµÄfirst¼¯ºÏÉÏ´ÎÊÇ·ñÉú³É
+					GrammerCode right_code = rule[i];					//å¯å¯¼ç©ºçš„äº§ç”Ÿå¼å³éƒ¨éç»ˆæç¬¦ä»£ç 
+					auto iter = mid.find(right_code);			//æ£€æŸ¥è¯¥éç»ˆæç¬¦çš„firsté›†åˆä¸Šæ¬¡æ˜¯å¦ç”Ÿæˆ
 					if ((iter != mid.end())) {
 						merge(mid, *next_mid, code, right_code);
 						merged = true;
@@ -116,7 +116,7 @@ const FirstSet& LR1DriverInst::get_first() {
 	return _result;
 }
 
-//ÒÑ¾­»ñÈ¡µÄfirst¼¯ºÏ£¬ÇóÒ»¸ö¾äĞÍµÄfirst¼¯ºÏ
+//å·²ç»è·å–çš„firsté›†åˆï¼Œæ±‚ä¸€ä¸ªå¥å‹çš„firsté›†åˆ
 LR1TEMPLATE
 std::set<LexCode> LR1DriverInst::get_first(const grammer::Rule &rule) {
 	get_first();
@@ -134,7 +134,7 @@ std::set<LexCode> LR1DriverInst::get_first(const grammer::Rule &rule) {
 		auto right = rule.getRight();
 		GrammerCode right_code = right[empty_num];
 		if (_grammer.IsLexCode(right_code)) result.insert(right_code);
-		else result.insert(first[right_code].begin(), first[right_code].end());	//ºÏ²¢
+		else result.insert(first[right_code].begin(), first[right_code].end());	//åˆå¹¶
 		if (empty_num > 0) result.erase(result.find(_grammer.getEmpty()));
 	}
 	return result;
@@ -144,7 +144,7 @@ std::set<LexCode> LR1DriverInst::get_first(const grammer::Rule &rule) {
 LR1TEMPLATE
 class LR1DriverInst::TableItem {
 	Action action;
-	union dependent_union {			//´æ´¢¹æÔ¼ÓÃµÄ²úÉúÊ½»ò×ªÈëµÄ×´Ì¬
+	union dependent_union {			//å­˜å‚¨è§„çº¦ç”¨çš„äº§ç”Ÿå¼æˆ–è½¬å…¥çš„çŠ¶æ€
 		grammer::Rule* pRule;
 		State* nextState;
 	};
@@ -205,7 +205,7 @@ public:
 				std::cout << right[i] << " ";
 			}
 			if (position == right.size()) std::cout << ". ";
-			if (right.size() == 0) std::cout << "e";            //²ú³ÌÊ½Îª¿ÕµÄÊä³ö
+			if (right.size() == 0) std::cout << "e";            //äº§ç¨‹å¼ä¸ºç©ºçš„è¾“å‡º
 		};
 		for (const auto &pair : items) {
 			print_item(pair.first);
@@ -232,7 +232,7 @@ bool LR1DriverInst::State::isReduceItem(const Item &item) {
 LR1TEMPLATE
 void LR1DriverInst::State::merge_lalr_state(const State *other) {
 	non_duplicate_comp comp;
-	//¶ÏÑÔÁ½¸ö×´Ì¬ÓĞÍ¬ĞÄºË
+	//æ–­è¨€ä¸¤ä¸ªçŠ¶æ€æœ‰åŒå¿ƒæ ¸
 	assert(isLA);
 	assert(!comp(this, other));
 	assert(!comp(other, this));
@@ -268,7 +268,7 @@ void LR1DriverInst::State::conflict_check()const {
 	}
 }
 
-//Çó³öËùÓĞÏîÄ¿A->¦Ã.¦Á¦Â(¦Á¡ÊVn¡ÈVt)ÖĞ¦ÁµÄ²¿·ÖºÍ·µ»Ø¸ÃÏîÄ¿,²¢½«ËùÓĞ¹æÔ¼ÏîÌîÈëAction±íÖĞ
+//æ±‚å‡ºæ‰€æœ‰é¡¹ç›®A->Î³.Î±Î²(Î±âˆˆVnâˆªVt)ä¸­Î±çš„éƒ¨åˆ†å’Œè¿”å›è¯¥é¡¹ç›®,å¹¶å°†æ‰€æœ‰è§„çº¦é¡¹å¡«å…¥Actionè¡¨ä¸­
 LR1TEMPLATE
 std::map<GrammerCode, std::list<Item>> LR1DriverInst::State::allMarks()
 {
@@ -279,10 +279,10 @@ std::map<GrammerCode, std::list<Item>> LR1DriverInst::State::allMarks()
 		size_t position = std::get<Position>(pair.first);
 		assert(position <= rule->size());
 		if (position == rule->size()) {
-            auto reduceItem = TableItem(Action::Reduce, (const void *)rule);//ÏîÄ¿ÒÑ¾­Ì½Ë÷µ½½áÎ²
+            auto reduceItem = TableItem(Action::Reduce, (const void *)rule);//é¡¹ç›®å·²ç»æ¢ç´¢åˆ°ç»“å°¾
 			for (LexCode prospect : pair.second) {
 				auto actValue = ActionValue(prospect, reduceItem);
-				gotoAct.insert(actValue);										//Ìí¼Ó¹æÔ¼ÏîÄ¿
+				gotoAct.insert(actValue);										//æ·»åŠ è§„çº¦é¡¹ç›®
 			}
 			continue;
 		}
@@ -316,9 +316,9 @@ void LR1DriverInst::State::_lookahead(const Item &item, const std::set<LexCode>&
             
             if (position == ruleSize){
                 for(LexCode code : lookAhead) addAction(code, TableItem(Action::Reduce, rule));
-                continue;    //ÏîÄ¿µãÎ»ÖÃÔÚ×îºóÔò²»»á½«Õ¹Íû·û´«²¥ÏÂÈ¥
+                continue;    //é¡¹ç›®ç‚¹ä½ç½®åœ¨æœ€ååˆ™ä¸ä¼šå°†å±•æœ›ç¬¦ä¼ æ’­ä¸‹å»
             }
-			GrammerCode next_mark = (*rule)[position];			//´«²¥µ½ÏÂÒ»¸ö×´Ì¬¶ÔÓ¦µÄÊäÈë·ûºÅ
+			GrammerCode next_mark = (*rule)[position];			//ä¼ æ’­åˆ°ä¸‹ä¸€ä¸ªçŠ¶æ€å¯¹åº”çš„è¾“å…¥ç¬¦å·
             auto table_item_iter = gotoAct.find(next_mark);
             if (table_item_iter != gotoAct.end()) {
                 State *state = table_item_iter->second.getState();
@@ -327,7 +327,7 @@ void LR1DriverInst::State::_lookahead(const Item &item, const std::set<LexCode>&
             }
             if(_grammer.IsGrammerCode(next_mark)){
                 auto &rule_right = rule->getRight();
-                std::vector<GrammerCode> right_for_pros(rule_right.begin() + position + 1, rule_right.end());            //ÏîÄ¿Î´Ì½Ë÷²¿·Ö¦Â
+                std::vector<GrammerCode> right_for_pros(rule_right.begin() + position + 1, rule_right.end());            //é¡¹ç›®æœªæ¢ç´¢éƒ¨åˆ†Î²
                 auto right_first = _Singleton(LR1DriverInst).get_first(grammer::Rule(0, std::move(right_for_pros)));
                 if (right_first.find(_grammer.getEmpty()) != right_first.end()) {
                     const auto &rules = _grammer.getRules();
@@ -365,12 +365,12 @@ void LR1DriverInst::State::_add_item(
 	}
 	GrammerCode lcode = (*pRule)[position];
 
-	auto &rules = _grammer.getRules();//µİ¹éÇóclosure±Õ°ü
+	auto &rules = _grammer.getRules();//é€’å½’æ±‚closureé—­åŒ…
 	auto find_iter = rules.find(lcode);
 	if (find_iter == rules.end()) return;
 	const auto &ruleList = find_iter->second;
 	for (auto &rule : ruleList) {
-		std::set<LexCode> prospect = get_prospect(*pRule, position + 1, forward);	//Çó³öÕ¹Íû·û¼¯first(¦Âa)
+		std::set<LexCode> prospect = get_prospect(*pRule, position + 1, forward);	//æ±‚å‡ºå±•æœ›ç¬¦é›†first(Î²a)
 		_add_item(&rule, 0, std::move(prospect));
 	}
 }
@@ -385,7 +385,7 @@ void LR1DriverInst::State::addAction(GrammerCode input, const TableItem &tableIt
 	gotoAct[input] = tableItem;
 }
 /******************
-±È½ÏÔ­Ôò£ºÏÈ±È½ÏÏîÄ¿¸öÊı£¬ÏàÍ¬ÔÙ±È½ÏLR(0)ÏîÄ¿£¬×îºó±È½ÏÕ¹Íû¼¯ºÏ
+æ¯”è¾ƒåŸåˆ™ï¼šå…ˆæ¯”è¾ƒé¡¹ç›®ä¸ªæ•°ï¼Œç›¸åŒå†æ¯”è¾ƒLR(0)é¡¹ç›®ï¼Œæœ€åæ¯”è¾ƒå±•æœ›é›†åˆ
 ******************/
 LR1TEMPLATE
 class LR1DriverInst::non_duplicate_comp {
@@ -410,7 +410,7 @@ public:
 				if (find_iter_b->second < find_iter_a->second) return false;
 			}
 		}
-		return false;					//Ä¬ÈÏ·µ»ØÖµ£¬ÆäÊµ´ú±íÁËÏàµÈµÄÇé¿ö
+		return false;					//é»˜è®¤è¿”å›å€¼ï¼Œå…¶å®ä»£è¡¨äº†ç›¸ç­‰çš„æƒ…å†µ
 	}
 };
 LR1TEMPLATE
@@ -421,7 +421,7 @@ std::set<LexCode> LR1DriverInst::get_prospect(
 	static auto &_grammer = _Singleton(SpecifiedGrammer);
 
 	std::vector<GrammerCode> right = rule.getRight();
-	std::vector<GrammerCode> right_for_pros(right.begin() + position, right.end());			//ÏîÄ¿Î´Ì½Ë÷²¿·Ö¦Â
+	std::vector<GrammerCode> right_for_pros(right.begin() + position, right.end());			//é¡¹ç›®æœªæ¢ç´¢éƒ¨åˆ†Î²
 	using Driver = LR1DriverInst;
 	auto rfp_first = _Singleton(Driver).get_first(grammer::Rule(0, std::move(right_for_pros)));
 	auto find_iter = rfp_first.find(_grammer.getEmpty());
@@ -436,8 +436,8 @@ LR1TEMPLATE
 class LR1DriverInst::StateMachine {
 	State *initState;
 	State *finalState;
-	std::set<State*> states;												//ÒÔÖ¸ÕëÎª±È½Ï»ù´¡µÄmap
-	std::set<State *, non_duplicate_comp> non_duplicate_states;			//ÒÔ×´Ì¬ÖµÎª±È½Ï»ù´¡µÄmap
+	std::set<State*> states;												//ä»¥æŒ‡é’ˆä¸ºæ¯”è¾ƒåŸºç¡€çš„map
+	std::set<State *, non_duplicate_comp> non_duplicate_states;			//ä»¥çŠ¶æ€å€¼ä¸ºæ¯”è¾ƒåŸºç¡€çš„map
 	std::set<State*> expandState(State *old);
 public:
 	StateMachine();
@@ -455,13 +455,13 @@ public:
 	}
 };
 
-//ÌîºÃActionºÍgoto±í²¢·µ»ØĞÂÉú³É×´Ì¬
+//å¡«å¥½Actionå’Œgotoè¡¨å¹¶è¿”å›æ–°ç”ŸæˆçŠ¶æ€
 LR1TEMPLATE
 std::set<typename LR1DriverInst::State* >
 LR1DriverInst::StateMachine::expandState(State *old)
 {
 	std::set<State *> result;
-	const auto &marks = old->allMarks();					//ÌîºÃReduce²¿·Ö
+	const auto &marks = old->allMarks();					//å¡«å¥½Reduceéƒ¨åˆ†
 	auto &projects = old->getProjects();
 	for (auto &pair : marks) {	
 		GrammerCode mark = pair.first;
