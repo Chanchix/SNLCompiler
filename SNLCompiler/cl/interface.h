@@ -14,13 +14,13 @@
 
 class Decodable{
 public:
-    virtual std::string code_to_string(unsigned int)const = 0;
-    class CodeNotFoundException;
+    virtual const std::string& code_to_string(unsigned int)const = 0;
+    class NoSuchCodeException;
 };
-class Decodable::CodeNotFoundException : public std::exception{
+class Decodable::NoSuchCodeException : public std::exception{
     unsigned int code;
 public:
-    CodeNotFoundException(unsigned int c):code(c){}
+    NoSuchCodeException(unsigned int c):code(c){}
     unsigned int getCode() { return code; }
     const char* what(){
         return exAlgorithm::string_format("Can not convert code({0}) to string.", code).c_str();
@@ -29,13 +29,13 @@ public:
 class Encodable{
 public:
     virtual unsigned int string_to_code(const std::string&)const = 0;
-    class StringNotFoundException;
+    class NoSuchStringException;
 };
-class Encodable::StringNotFoundException : public std::exception{
+class Encodable::NoSuchStringException : public std::exception{
     std::string _string;
 public:
-    StringNotFoundException(std::string&& str):_string(std::move(str)){}
-    StringNotFoundException(const std::string& str):_string(str){}
+    NoSuchStringException(std::string&& str):_string(std::move(str)){}
+    NoSuchStringException(const std::string& str):_string(str){}
     std::string getString() { return _string; }
     const char* what(){
         return exAlgorithm::string_format("Can not convert string\"{0}\" to code.", _string).c_str();

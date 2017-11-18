@@ -66,7 +66,7 @@ std::string Token::tostring(Decodable &convert) const {
     if (identifier) return std::string(identifier);
     else try{
         return convert.code_to_string(code);
-    }catch(Decodable::CodeNotFoundException &e){
+    }catch(Decodable::NoSuchCodeException &e){
         return "null";
     }
 }

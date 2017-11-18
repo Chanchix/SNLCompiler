@@ -58,15 +58,15 @@ public:
 public:
     bool isLexCode(LexCode code) const override{ return code <= identifier && code >= end; }
     LexCode getEnd() const override{ return end; }
-    std::string code_to_string(LexCode code)const override{
+    const std::string& code_to_string(LexCode code)const override{
         _CTW::const_iterator it = code_to_word.find(code);
         if (it != code_to_word.end()) return it->second;
-        else throw Decodable::CodeNotFoundException(code);
+        else throw Decodable::NoSuchCodeException(code);
     }
     LexCode string_to_code(const std::string &str)const override{
         _WTC::const_iterator it = word_to_code.find(str);
         if(it != word_to_code.end()) return it->second;
-        else throw Encodable::StringNotFoundException(str);
+        else throw Encodable::NoSuchStringException(str);
     }
 };
 

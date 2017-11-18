@@ -50,7 +50,7 @@ Token Scanner<SNLLex>::createIdToken(const char *id, int row) {
     SNLLex &lex = _Singleton(SNLLex);
     try{
         return Token(lex.string_to_code(id), row);
-    }catch(const Encodable::StringNotFoundException & e){
+    }catch(const Encodable::NoSuchStringException & e){
         return Token(SNLLex::identifier, row, id);
     }
 }

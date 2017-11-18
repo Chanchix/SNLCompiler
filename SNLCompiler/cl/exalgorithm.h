@@ -8,7 +8,6 @@
 #include<regex>
 #include<sstream>
 #include<set>
-#include<ctime>
 
 #define _Singleton(_class) (exAlgorithm::Singleton<_class>::getInstance())
 
@@ -129,27 +128,5 @@ namespace exAlgorithm {
 			return singleT;
 		}
 	};
-	class Timer {
-		clock_t _start;
-		int duration;
-		bool _isStart;
-	public:
-		Timer() :duration(0),_isStart(false) {}
-		void start() {
-			if (!_isStart) {
-				_isStart = true;
-				_start = clock();
-			}
-		}
-		void end() {
-			if (_isStart) {
-				duration += clock() - _start;
-				_isStart = false;
-			}
-		}
-		int getTicks() const { return duration; }
-		double getDuration()const { return double(duration) / CLOCKS_PER_SEC; }
-	};
-
 }
 #endif

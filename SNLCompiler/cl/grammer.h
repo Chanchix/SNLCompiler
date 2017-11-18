@@ -24,7 +24,7 @@ namespace grammer {
 				right.push_back(*iter);
 		}
 		Rule(GrammerCode l, const std::vector<GrammerCode>& r) :right(r), left(l) {}
-		Rule(GrammerCode l, std::vector<GrammerCode>&& r) :right(r), left(l) {}
+        Rule(GrammerCode l, std::vector<GrammerCode>&& r) :right(std::move(r)), left(l) {}
 		size_t length() const { return right.size(); }
 		GrammerCode& operator[](size_t index) { return right[index]; }
 		GrammerCode operator[](size_t index) const{ return right[index]; }

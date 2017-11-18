@@ -24,11 +24,7 @@
 namespace test {	
 	void testLR() {
 		using Driver = LR1Driver<SNLGrammer>;
-		exAlgorithm::Timer timer;
-		timer.start();
 		const auto &stm = _Singleton(Driver).getStateMachine();
-		timer.end();
-		std::cout << "Running Time : " << timer.getDuration() << "s" << std::endl << std::endl;
 		stm.print();
 	}
     void testParser(){
