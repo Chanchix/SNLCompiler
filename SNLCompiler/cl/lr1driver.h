@@ -13,15 +13,14 @@
 
 #define RulePtr 0
 #define Position 1
-#define LR1TEMPLATE template<class SpecifiedGrammer, bool isLA, SafeMode mode>
-#define LR1DriverInst LR1Driver<SpecifiedGrammer, isLA, mode>
+#define LR1TEMPLATE template<class SpecifiedGrammer, bool isLA>
+#define LR1DriverInst LR1Driver<SpecifiedGrammer, isLA>
 
 typedef  std::tuple<const grammer::Rule*, size_t> Item;
 using FirstSet = std::map<int, std::set<LexCode>>;
 enum class Action { Shift, Reduce, Accept, Error };
-enum SafeMode { safe, no_conflict_check };
 
-template<class SpecifiedGrammer, bool isLA = true, SafeMode mode = safe>
+template<class SpecifiedGrammer, bool isLA = true>
 class LR1Driver {
 private:
 	friend class exAlgorithm::Singleton<LR1DriverInst>;
@@ -503,7 +502,6 @@ LR1DriverInst::StateMachine::StateMachine():finalState(new State()), initState(n
     initState->addAction(_grammer.getStart(), TableItem(Action::Accept));
 	finalState->addItem(Item(&_grammer.getExRule(), 1), { _grammer.getLexEnd() });
 	finalState->addAction(SpecifiedGrammer::getLexEnd(), TableItem(Action::Accept));
-
 	std::queue<State*> active;
 	active.push(initState);
 	states.insert(initState);
@@ -520,9 +518,7 @@ LR1DriverInst::StateMachine::StateMachine():finalState(new State()), initState(n
 			non_duplicate_states.insert(state);	
 		}
 	}
-    if(mode < no_conflict_check){
-        for (const State *state : states) state->conflict_check();
-    }
+    for (const State *state : states) state->conflict_check();
 }
 LR1TEMPLATE
 LR1DriverInst::StateMachine::StateMachine(StateMachine &&stm):

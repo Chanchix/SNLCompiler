@@ -11,7 +11,7 @@
 #include"snl_grammer.h"
 #include"cl/corrector.h"
 #include"cl/lr1driver.h"
-using Driver = LR1Driver<SNLGrammer, true, safe>;
+using Driver = LR1Driver<SNLGrammer, true>;
 
 template<>
 class corrector_dispatcher<Driver> : public corrector<Driver>{
