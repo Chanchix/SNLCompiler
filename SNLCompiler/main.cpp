@@ -8,22 +8,23 @@
 
 
 
-#include"LR1Driver.h"
-#include"SNLGrammer.h"
-#include"parser.h"
-#include"scanner.h"
-#include"exAlgorithm.h"
+#include"cl/lr1driver.h"
+#include"cl/parser.h"
+
+#include"snl_lex.h"
+#include"snl_scanner.h"
+#include"snl_grammer.h"
+#include"snl_corrector.h"
+
+
+#include"cl/exalgorithm.h"
 #define isLA true
 
 
 namespace test {	
 	void testLR() {
 		using Driver = LR1Driver<SNLGrammer>;
-		exAlgorithm::Timer timer;
-		timer.start();
 		const auto &stm = _Singleton(Driver).getStateMachine();
-		timer.end();
-		std::cout << "Running Time : " << timer.getDuration() << "s" << std::endl << std::endl;
 		stm.print();
 	}
     void testParser(){
@@ -38,12 +39,11 @@ namespace test {
         TokenList *tList = scanner.getTokenList();
         using Driver = LR1Driver<SNLGrammer>;
         LR1Parser<Driver> parser;
-        auto *tree = parser.getSyntaxTree(tList);
-        if(tree) delete tree;
+        auto *stree = parser.getSyntaxTree(tList);
+        if(stree) delete stree;
         fin.close();
     }
 }
-
 int main(int argc, char* argv[])
 {
     test::testParser();

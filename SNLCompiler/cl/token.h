@@ -17,18 +17,18 @@ public:
 	Token(const Token &);
 	Token(Token &&);											    //move构造函数
 	Token(TokenCode, unsigned int = 0, const char* = nullptr);		//词法分析用的构造函数
-	Token() :Token(0, 0) {}										    //默认构造函数
+	Token() :Token(0, 0, nullptr) {}										    //默认构造函数
     Token& operator=(const Token&);
 	bool operator == (const Token &)const;
     
 	TokenCode getcode() const { return code; }						//获取Token的代码
 	unsigned int getrow() const { return row; }						//获取Token在源文件中的行数
 	const char* getid()const { return identifier; }
-	std::string tostring(mapping&)const;							//获取Token名称
+	std::string tostring(Decodable &)const;							//获取Token名称
 	~Token();
 };
 Token::Token(const Token &other) {
-	Token(other.code, other.row, other.identifier);
+	new (this)Token(other.code, other.row, other.identifier);
 }
 Token::Token(Token &&other) {
 	code = other.code;
@@ -62,11 +62,13 @@ bool Token::operator ==(const Token &other)const {
 		other.identifier &&
 		(strcmp(identifier, other.identifier) == 0);		//同为标识符，则比较标识符是否相同
 }
-std::string Token::tostring(mapping &code_lib) const {
+std::string Token::tostring(Decodable &convert) const {
     if (identifier) return std::string(identifier);
-	mapping::iterator it = code_lib.find(code);
-	if (it != code_lib.end()) return it->second;
-	else return std::string("null");
+    else try{
+        return convert.code_to_string(code);
+    }catch(Decodable::NoSuchCodeException &e){
+        return "null";
+    }
 }
 Token::~Token() {
 	if (!identifier) delete[] identifier;
